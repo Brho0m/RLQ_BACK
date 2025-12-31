@@ -363,6 +363,7 @@ public class GameService {
                 .map(p -> PlayerScoreDTO.builder()
                         .userId(p.getUser().getId())
                         .username(p.getUser().getUsername())
+                        .firstName(p.getUser().getFirstName())
                         .score(p.getScore())
                         .build())
                 .collect(Collectors.toList());

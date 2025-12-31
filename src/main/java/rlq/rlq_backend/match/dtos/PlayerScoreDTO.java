@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 public class PlayerScoreDTO {
     private Long userId;
     private String username;
+    private String firstName;
     private Long score;
 }
 
