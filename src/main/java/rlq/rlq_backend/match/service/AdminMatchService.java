@@ -1,6 +1,7 @@
 package rlq.rlq_backend.match.service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +48,8 @@ public class AdminMatchService {
         Match match = Match.builder()
                 .status(MatchStatus.WAITING)
                 .gameStatus(GameStatus.MATCH_CREATED)
-                .createdAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now(ZoneId.of("Asia/Riyadh"))
+                )
                 .build();
         MatchDTO matchDTO = matchMapper.toDTO(match);
         matchWsPublisher.publishMatchLobby(MatchEvent.<MatchDTO>builder()
@@ -75,7 +77,8 @@ public class AdminMatchService {
 
         match.setStatus(MatchStatus.IN_PROGRESS);
         match.setGameStatus(GameStatus.QUESTION_STARTED);
-        match.setStartedAt(LocalDateTime.now());
+        match.setStartedAt(LocalDateTime.now(ZoneId.of("Asia/Riyadh"))
+        );
 
         List<Question> questions = questionRepository.findRandomQuestions(3);
 
@@ -91,7 +94,8 @@ public class AdminMatchService {
                     .match(match)
                     .question(q)
                     .status(questionOrder == 1 ? MatchQuestionStatus.SUBMITTING_ANSWERS : MatchQuestionStatus.PENDING)
-                    .submissionDeadline(LocalDateTime.now().plusSeconds(10))
+                    .submissionDeadline(LocalDateTime.now(ZoneId.of("Asia/Riyadh"))
+                            .plusSeconds(10))
                     .questionOrder(questionOrder++)
                     .build());
         }

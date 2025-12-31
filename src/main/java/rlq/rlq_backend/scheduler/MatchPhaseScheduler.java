@@ -1,6 +1,7 @@
 package rlq.rlq_backend.scheduler;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 import org.springframework.scheduling.annotation.Scheduled;
@@ -27,7 +28,7 @@ public class MatchPhaseScheduler {
     // Run often; logic is cheap and ensures deadlines are respected.
     @Scheduled(fixedDelay = 1000)
     public void scheduleMatchPhase() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Riyadh"));
 
         // 1) Submission deadline reached (with grace period) -> move to selection phase
         List<MatchQuestion> submitExpired = matchQuestionRepository.findByStatusAndSubmissionDeadlineBefore(

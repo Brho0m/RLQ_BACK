@@ -1,6 +1,7 @@
 package rlq.rlq_backend.match.service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -57,7 +58,8 @@ public class MatchService {
                     MatchPlayer.builder()
                             .match(match)
                             .user(user)
-                            .joinedAt(LocalDateTime.now())
+                            .joinedAt(LocalDateTime.now(ZoneId.of("Asia/Riyadh"))
+                            )
                             .score(0L)
                             .build());
 
