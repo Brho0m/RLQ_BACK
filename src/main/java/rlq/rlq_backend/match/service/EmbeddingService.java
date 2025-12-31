@@ -23,7 +23,7 @@ public class EmbeddingService {
             throw new BusinessException("مبروك جبتها صح! الحين لازم تكتب اجابة ثانية");
         }
 
-        if (!userText.matches("-?\\p{Nd}+(\\.\\p{Nd}+)?") && !correctText.matches("-?\\p{Nd}+(\\.\\p{Nd}+)?")) {
+        if (!userText.matches("-?\\p{Nd}+(\\.\\p{Nd}+)?") || !correctText.matches("-?\\p{Nd}+(\\.\\p{Nd}+)?")) {
 
             float[] uVec = toFloatArray(embeddingModel.embed(u));
             float[] cVec = toFloatArray(embeddingModel.embed(c));

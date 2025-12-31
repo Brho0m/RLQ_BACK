@@ -19,6 +19,7 @@ public interface MatchQuestionRepository extends JpaRepository<MatchQuestion, Lo
     List<MatchQuestion> findByMatchIdAndStatus(Long matchId, MatchQuestionStatus status);
     List<MatchQuestion> findByStatusAndSubmissionDeadlineBefore(MatchQuestionStatus status, LocalDateTime submissionDeadline);
     List<MatchQuestion> findByStatusAndSelectionDeadlineBefore(MatchQuestionStatus status, LocalDateTime selectionDeadline);
+    List<MatchQuestion> findByStatusAndSubmissionDeadlineAfter(MatchQuestionStatus status, LocalDateTime selectionDeadline);
 
     // Shared lock - allows multiple submissions in parallel
     @Lock(LockModeType.PESSIMISTIC_READ)

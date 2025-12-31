@@ -3,18 +3,7 @@ package rlq.rlq_backend.match.entity;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Index;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -55,7 +44,7 @@ public class MatchQuestion {
     @Column
     private LocalDateTime selectionDeadline;
 
-    @OneToMany(mappedBy = "matchQuestion")
+    @OneToMany(mappedBy = "matchQuestion", fetch = FetchType.EAGER)
     private List<AnswerOption> answerOptions;
 
     @OneToMany(mappedBy = "matchQuestion")

@@ -40,6 +40,9 @@ public class MatchPhaseScheduler {
                 MatchQuestionStatus.SELECTING_ANSWERS, now);
         selectExpired.forEach(mq -> gameService.transitionToResults(mq.getId()));
 
+        List<MatchQuestion> finishedQuestions = matchQuestionRepository.findByStatusAndSubmissionDeadlineAfter(MatchQuestionStatus.SUBMITTING_ANSWERS, now);
+        finishedQuestions.stream().filter(mq -> mq.getAnswerOptions().size() == mq.getMatch().getPlayers().size()).forEach(mq -> gameService.transitionToSelectionPhase(mq.getId()));
+
         // 3) Results window finished -> show leaderboard for 10s
         List<Match> resultsExpired = matchRepository.findByStatusAndGameStatusAndResultsUntilBefore(
                 MatchStatus.IN_PROGRESS, GameStatus.QUESTION_RESULTS, now);

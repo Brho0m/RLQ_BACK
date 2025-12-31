@@ -57,7 +57,7 @@ public class Match {
     @Column
     private Integer maxPlayers;
 
-    @OneToMany(mappedBy = "match", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "match", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<MatchPlayer> players;
 
     @OneToMany(mappedBy = "match", cascade = CascadeType.ALL)

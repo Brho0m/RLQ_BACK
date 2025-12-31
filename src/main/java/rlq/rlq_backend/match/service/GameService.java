@@ -193,11 +193,6 @@ public class GameService {
                 .build();
 
         answerOptionRepository.save(answer);
-
-        if (mq.getMatch().getPlayers().size() == answerOptionRepository.findByMatchQuestionId(matchQuestionId)
-                .size()) {
-            transitionToSelectionPhase(matchQuestionId);
-        }
     }
 
     @Transactional
