@@ -12,39 +12,92 @@ import rlq.rlq_backend.exception.BusinessException;
 public class EmbeddingService {
 
     private final EmbeddingModel embeddingModel;
-    private final double threshold = 0.7;
 
     public void assertNotTooClose(String userText, String correctText) {
-        String u = normalize(userText);
-        String c = normalize(correctText);
+        String u = normalizeStrongly(userText);
+        String c = normalizeStrongly(correctText);
 
         // فلترة سريعة قبل embedding (مهمة)
-        if (u.equals(c) || u.contains(c) || c.contains(u)) {
+        if (u.equals(c)) {
             throw new BusinessException("مبروك جبتها صح! الحين لازم تكتب اجابة ثانية");
         }
 
-        if (!userText.matches("-?\\p{Nd}+(\\.\\p{Nd}+)?") || !correctText.matches("-?\\p{Nd}+(\\.\\p{Nd}+)?")) {
+        if (!u.matches("-?\\p{Nd}+(\\.\\p{Nd}+)?") || !c.matches("-?\\p{Nd}+(\\.\\p{Nd}+)?")) {
 
             float[] uVec = toFloatArray(embeddingModel.embed(u));
             float[] cVec = toFloatArray(embeddingModel.embed(c));
 
             double sim = cosineSimilarity(uVec, cVec);
 
-            if (sim >= threshold) {
+            if (sim >= 0.65) {
                 throw new BusinessException("مبروك جبتها صح! الحين لازم تكتب اجابة ثانية");
-            }
-            try {
-                Thread.sleep(9000);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
             }
         }
     }
 
-    private String normalize(String s) {
+    private static final String[] DATE_STOP_WORDS = {
+            "ميلادي",
+            "هجري",
+            "دولة",
+            "مدينة",
+            "دوله",
+            "مدينه",
+            "م",
+            "هـ",
+            "ه"
+    };
+
+    private String removeDateWords(String s) {
+        for (String w : DATE_STOP_WORDS) {
+            s = s.replaceAll("(^|\\s)" + java.util.regex.Pattern.quote(w) + "(?=\\s|$)", "");
+        }
+        return s;
+    }
+
+
+    private String normalizeDigits(String input) {
+        if (input == null)
+            return null;
+
+        StringBuilder sb = new StringBuilder();
+        for (char ch : input.toCharArray()) {
+            if (ch >= '٠' && ch <= '٩') {
+                sb.append((char) ('0' + (ch - '٠'))); // Arabic-Indic
+            } else if (ch >= '۰' && ch <= '۹') {
+                sb.append((char) ('0' + (ch - '۰'))); // Persian
+            } else {
+                sb.append(ch);
+            }
+        }
+        return sb.toString();
+    }
+
+    private String normalizeStrongly(String s) {
         if (s == null)
             return "";
-        return s.trim().toLowerCase().replaceAll("\\s+", " ");
+
+        s = normalizeDigits(s);
+        s = s.trim().toLowerCase();
+
+        // إزالة التشكيل العربي
+        s = s.replaceAll("[\\u0610-\\u061A\\u064B-\\u065F\\u0670\\u06D6-\\u06ED]", "");
+
+        // توحيد بعض الحروف العربية (اختياري)
+        s = s.replace("أ", "ا").replace("إ", "ا").replace("آ", "ا").replace("٫", ".").replace("٬", ".")
+                .replace(",", ".")
+                .replace("ى", "ي").replace("ـ", "").replace("ڤ", "ف").replace("چ", "ج");
+
+        // خلي أي شيء مو حرف/رقم = مسافة
+        s = s.replaceAll("[^\\p{L}\\p{Nd}.]+", " ");
+
+        s = s.replaceAll("(\\d)([\\p{L}]+)", "$1 $2");
+
+        // ضغط المسافات
+        s = s.replaceAll("\\s+", " ").trim();
+
+        s = removeDateWords(s);
+
+        return s;
     }
 
     private double cosineSimilarity(float[] a, float[] b) {
