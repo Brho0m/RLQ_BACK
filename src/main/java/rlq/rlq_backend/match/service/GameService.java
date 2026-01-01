@@ -265,7 +265,7 @@ public class GameService {
 
         mq.setStatus(MatchQuestionStatus.SELECTING_ANSWERS);
         mq.setSelectionDeadline(LocalDateTime.now(ZoneId.of("Asia/Riyadh"))
-                .plusSeconds(500));
+                .plusSeconds(60));
         mq.getMatch().setGameStatus(GameStatus.SELECTION_PHASE);
         matchQuestionRepository.save(mq);
         matchRepository.save(mq.getMatch());
@@ -300,7 +300,7 @@ public class GameService {
         mq.getMatch().setGameStatus(GameStatus.QUESTION_RESULTS);
         // Give clients time to display results before we move to leaderboard
         mq.getMatch().setResultsUntil(LocalDateTime.now(ZoneId.of("Asia/Riyadh"))
-                .plusSeconds(9));
+                .plusSeconds(10));
         mq.getMatch().setLeaderboardUntil(null);
         matchRepository.save(mq.getMatch());
         matchQuestionRepository.save(mq);
