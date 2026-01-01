@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 @NoArgsConstructor
 public class SelectionPhaseDTO {
     private Long matchQuestionId;
+    private String questionText;
     private List<AnswerOptionDTO> options;
     private LocalDateTime deadline;
 }

@@ -80,9 +80,9 @@ public class AdminMatchService {
         match.setStartedAt(LocalDateTime.now(ZoneId.of("Asia/Riyadh"))
         );
 
-        List<Question> questions = questionRepository.findRandomQuestions(3);
+        List<Question> questions = questionRepository.findRandomQuestions(10);
 
-        if (questions.isEmpty() || questions.size() != 3) {
+        if (questions.isEmpty() || questions.size() != 10) {
             throw new BusinessException("Not enough questions");
         }
 

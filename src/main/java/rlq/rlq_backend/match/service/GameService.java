@@ -77,6 +77,7 @@ public class GameService {
 
                 SelectionPhaseDTO selectionPhase = SelectionPhaseDTO.builder()
                         .matchQuestionId(current.getMatchQuestionId()).options(options)
+                        .questionText(current.getQuestionText())
                         .deadline(current.getSelectionDeadline()).build();
 
                 return GameStateDTO.builder()
@@ -279,6 +280,7 @@ public class GameService {
                         .map(o -> AnswerOptionDTO.builder().id(o.getId()).text(o.getText())
                                 .build())
                         .collect(Collectors.toList()))
+                .questionText(mq.getQuestion().getText())
                 .deadline(mq.getSelectionDeadline())
                 .build();
 
